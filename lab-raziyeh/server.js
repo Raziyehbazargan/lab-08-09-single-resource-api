@@ -12,23 +12,6 @@ const PORT = process.env.PORT || 3000;
 const router = new Router();
 // module logic
 
-//Bonus part
-// router.get('/api/person', function(req, res) {
-//   storage.default('person', storage.storage)
-//     .then( () => {
-//       res.writeHead(200, {'Content-Type': 'application/json'});
-//       res.write(storage.storage);
-//       res.end();
-//     })
-//     .catch( err => {
-//       console.error(err);
-//       res.writeHead(404, {'Content-Type': 'text/plain'});
-//       res.write('not found');
-//       res.end();
-//     });  
-// });
-
-
 router.get('/api/person', function(req, res) {
   if (req.url.query.id) {
     storage.fetchItem('person', req.url.query.id)
@@ -45,20 +28,17 @@ router.get('/api/person', function(req, res) {
     });
     return;
   }
-  res.writeHead(400, {
-    'Content-Type': 'text/plain',
-  });
+  res.writeHead(400, {'Content-Type': 'text/plain'});
   res.write('bad request');
   res.end();
 });
 
 router.post('/api/person', function(req,res) {
   try {
+    //because here we createing a new Person, and maybe it cause an error we need try{} catch{} here.
     var person = new Person(req.body.name, req.body.sex);
     storage.createItem('person', person);
-    res.writeHead(200, {
-      'Content-Type': 'application/json',
-    });
+    res.writeHead(200, { 'Content-Type': 'application/json'});
     res.write(JSON.stringify(person));
     res.end();
   } catch (err) {
@@ -82,18 +62,16 @@ router.delete('/api/person', function(req, res) {
       res.write('not found');
       res.end();
     });
-    return;
-  }
-  res.writeHead(400, {
-    'Content-Type': 'text/plain',
-  });
+    return; 
+    // instead of using else,  we can use return keyword 
+    //for returning if block
+  } 
+  res.writeHead(400, {'Content-Type': 'text/plain'});
   res.write('bad request');
   res.end();
 });
 
 
-const server = http.createServer(router.route());
-
-server.listen(PORT, function(){
+http.createServer(router.route()).listen(PORT, function(){
   console.log('server up ::', PORT);
 });
