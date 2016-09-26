@@ -29,7 +29,7 @@ module.exports = function(router) {
       })
       .catch( err => {
         console.log(err);
-        res.sendText(res, 500, 'server error');
+        response.sendText(res, 500, 'server error');
       });
     } catch (err) {
       console.error(err);
